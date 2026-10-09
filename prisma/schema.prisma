@@ -1,0 +1,203 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  name         String
+  passwordHash String
+  role         String          @default("CUSTOMER") // CUSTOMER | MERCHANT | ADMIN
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  sessions     Session[]
+  orders       Order[]
+  carts        Cart[]
+  conversations AIConversation[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Product {
+  id              String             @id @default(cuid())
+  name            String
+  slug            String             @unique
+  description     String
+  category        String
+  price           Float
+  currency        String             @default("USD")
+  stock           Int                @default(0)
+  imageUrl        String
+  rating          Float              @default(4.5)
+  reviewCount     Int                @default(0)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  attributes      ProductAttribute[]
+  cartItems       CartItem[]
+  orderItems      OrderItem[]
+  inventoryEvents InventoryEvent[]
+}
+
+model ProductAttribute {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  value     String
+
+  @@index([productId])
+}
+
+model Cart {
+  id        String     @id @default(cuid())
+  userId    String?
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  items     CartItem[]
+}
+
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity  Int      @default(1)
+  unitPrice Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
+}
+
+model Order {
+  id              String           @id @default(cuid())
+  orderNumber     String           @unique
+  userId          String?
+  user            User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  customerName    String
+  customerEmail   String
+  status          String           @default("DRAFT") // DRAFT, PENDING_APPROVAL, PAYMENT_PENDING, COMPLETED, PAYMENT_REVIEW, CANCELLED, FAILED
+  subtotal        Float
+  tax             Float            @default(0)
+  shipping        Float            @default(0)
+  total           Float
+  currency        String           @default("USD")
+  shippingAddress String?          // JSON stringified address
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  items           OrderItem[]
+  payments        Payment[]
+  paymentAttempts PaymentAttempt[]
+  auditEvents     AuditEvent[]
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+  productName String
+  quantity    Int
+  unitPrice   Float
+  lineTotal   Float
+  createdAt   DateTime @default(now())
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  orderId         String
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paypalOrderId   String   @unique
+  paypalCaptureId String?  @unique
+  amount          Float
+  currency        String   @default("USD")
+  status          String   @default("CREATED") // CREATED, APPROVED, COMPLETED, FAILED
+  payerEmail      String?
+  payerId         String?
+  rawResponse     String?  // JSON string
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model PaymentAttempt {
+  id            String   @id @default(cuid())
+  orderId       String
+  order         Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  paypalOrderId String?
+  status        String   // INITIATED, SUCCESS, FAILED, TIMEOUT
+  errorMessage  String?
+  ipAddress     String?
+  createdAt     DateTime @default(now())
+}
+
+model WebhookEvent {
+  id           String    @id @default(cuid())
+  eventId      String    @unique
+  eventType    String
+  resourceType String
+  payload      String    // JSON string
+  status       String    @default("PENDING") // PENDING, PROCESSED, FAILED, IGNORED
+  processedAt  DateTime?
+  errorMessage String?
+  createdAt    DateTime  @default(now())
+}
+
+model AIConversation {
+  id        String      @id @default(cuid())
+  userId    String?
+  user      User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessionId String?
+  title     String      @default("New Shopping Chat")
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  messages  AIMessage[]
+}
+
+model AIMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  conversation   AIConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           String         // user, assistant, system, tool
+  content        String
+  toolCalls      String?        // JSON string of tool invocations
+  toolResults    String?        // JSON string of tool outputs
+  createdAt      DateTime       @default(now())
+}
+
+model AuditEvent {
+  id          String   @id @default(cuid())
+  orderId     String?
+  order       Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  entityType  String   // ORDER, PAYMENT, PRODUCT, INVENTORY, USER
+  entityId    String
+  action      String   // CREATE, UPDATE, CAPTURE, REFUND, CANCEL, ADJUST_STOCK
+  performedBy String   // SYSTEM, USER:<id>, ADMIN:<id>, PAYPAL_WEBHOOK
+  metadata    String?  // JSON string
+  createdAt   DateTime @default(now())
+}
+
+model InventoryEvent {
+  id           String   @id @default(cuid())
+  productId    String
+  product      Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  changeAmount Int
+  reason       String   // ORDER_RESERVATION, ORDER_FULFILLED, MANUAL_RESTOCK, RETURN
+  referenceId  String?  // e.g. orderId
+  createdAt    DateTime @default(now())
+}

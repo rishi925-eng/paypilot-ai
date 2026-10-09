@@ -1,0 +1,26 @@
+{
+  "name": "paypilot-ai",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PayPilot AI — Open-Source AI-Powered Commerce & PayPal Payment Platform",
+  "author": "Rishi",
+  "license": "MIT",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix apps/api\" \"npm run dev --prefix apps/web\"",
+    "dev:api": "npm run dev --prefix apps/api",
+    "dev:web": "npm run dev --prefix apps/web",
+    "build": "npm run build --prefix apps/api && npm run build --prefix apps/web",
+    "test": "npm run test --prefix apps/api",
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:seed": "node --loader ts-node/esm prisma/seed.ts"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prisma": "^5.22.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  }
+}

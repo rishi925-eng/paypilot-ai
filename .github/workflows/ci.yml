@@ -1,0 +1,48 @@
+name: PayPilot CI Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: |
+          npm install
+          npm install --prefix packages/contracts
+          npm install --prefix apps/api
+          npm install --prefix apps/web
+
+      - name: Prisma Client Generation
+        run: |
+          npx prisma generate
+
+      - name: Build Contracts
+        run: |
+          npm run build --prefix packages/contracts
+
+      - name: Run Backend Unit & Integration Tests
+        run: |
+          npm test --prefix apps/api
+        env:
+          DATABASE_URL: "file:./dev.db"
+          PAYPAL_MODE: "sandbox"
+          AI_PROVIDER: "mock"
+
+      - name: Next.js Frontend Build Check
+        run: |
+          npm run build --prefix apps/web
