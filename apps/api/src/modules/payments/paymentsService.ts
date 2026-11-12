@@ -12,36 +12,51 @@ export async function createPayPalPaymentOrder(orderId: string) {
   if (!order) throw new Error("Order not found");
   if (order.status === "COMPLETED") throw new Error("Order is already paid");
 
+  // Calculate item breakdown with exact cent precision to satisfy PayPal v2 strict arithmetic
+  let calculatedItemTotal = 0;
+  const itemsPayload = order.items.map((item) => {
+    const unitPriceFixed = item.unitPrice.toFixed(2);
+    const lineTotal = Math.round(Number(unitPriceFixed) * item.quantity * 100) / 100;
+    calculatedItemTotal += lineTotal;
+    return {
+      name: item.productName.substring(0, 120),
+      unit_amount: {
+        currency_code: order.currency,
+        value: unitPriceFixed,
+      },
+      quantity: item.quantity.toString(),
+    };
+  });
+
+  calculatedItemTotal = Math.round(calculatedItemTotal * 100) / 100;
+  const shippingVal = order.shipping || 0;
+  const totalVal = order.total;
+  // tax = total - itemTotal - shipping to guarantee breakdown sum matches totalVal exactly
+  const taxVal = Math.max(0, Math.round((totalVal - calculatedItemTotal - shippingVal) * 100) / 100);
+
   const purchaseUnits: CreateOrderPayload["purchase_units"] = [
     {
       reference_id: order.id,
       description: `PayPilot Order #${order.orderNumber}`,
       amount: {
         currency_code: order.currency,
-        value: order.total.toFixed(2),
+        value: totalVal.toFixed(2),
         breakdown: {
           item_total: {
             currency_code: order.currency,
-            value: order.subtotal.toFixed(2),
+            value: calculatedItemTotal.toFixed(2),
           },
           tax_total: {
             currency_code: order.currency,
-            value: order.tax.toFixed(2),
+            value: taxVal.toFixed(2),
           },
           shipping: {
             currency_code: order.currency,
-            value: order.shipping.toFixed(2),
+            value: shippingVal.toFixed(2),
           },
         },
       },
-      items: order.items.map((item) => ({
-        name: item.productName.substring(0, 120),
-        unit_amount: {
-          currency_code: order.currency,
-          value: item.unitPrice.toFixed(2),
-        },
-        quantity: item.quantity.toString(),
-      })),
+      items: itemsPayload,
     },
   ];
 
