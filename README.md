@@ -9,19 +9,24 @@
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rishi925-eng/paypilot-ai)
 
-> **Official Submission for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/)**  
-> *Zero-Trust Agentic Commerce Platform orchestrating multi-step AI copilot flows, PayPal Honey coupon optimization, Simility AI fraud risk heuristics, Venmo social bill-splits, Xoom multi-currency FX rate locks, and AG Grid enterprise telemetry with server-side PayPal Sandbox & Pay in 4 checkout.*
+> *Enterprise Zero-Trust Agentic Commerce Platform orchestrating multi-step AI copilot flows, PayPal Honey coupon optimization, Simility AI fraud risk heuristics, Venmo social bill-splits, Xoom multi-currency FX rate locks, and AG Grid enterprise telemetry with server-side PayPal Sandbox & Pay in 4 checkout.*
 
 ---
 
-## 🏆 Hackathon Prize Targets
+## 💡 Why PayPilot AI? (The Core Problem & Solution)
 
-- 🥇 **Grand Prize (1st Place: $12,000 USD)**
-- 🤖 **Best Use of Agentic Commerce ($5,000 USD)**
-- 🧠 **Best Use of PayPal + AI ($5,000 USD)**
-- 📊 **Best Use of AG Grid ($5,000 USD - 1st Place Sponsor Prize)**
-- 🔌 **Best Use of APIMatic ($1,000 USD + 6mo Subscription)**
-- ☁️ **Best Use of Render ($1,000 USD Cloud Credits)**
+Traditional online commerce is plagued by high friction, fragmented toolchains, and rising checkout abandonment:
+- **Coupon drop-offs**: Shoppers waste up to 15 minutes hunting for expired coupon codes across external sites.
+- **Split payment headaches**: Coordinating group purchases and splitting bills with friends across multiple apps causes cart drop-off.
+- **Checkout fraud & price tampering**: Merchants lose billions to client-side price tampering, coupon manipulation, and bot attacks.
+- **Disconnected retail & warehouse inventory**: Physical POS stock and online warehouse databases frequently fall out of sync.
+
+**PayPilot AI** solves this by unifying autonomous AI orchestration with the complete **PayPal Developer Platform**:
+1. **Agentic Copilot**: Finds verified items, auto-applies verified Honey discounts, and generates locked quotes.
+2. **Zero-Trust Pricing**: Every cent, tax, and discount is cryptographically calculated and enforced server-side.
+3. **Simility AI Fraud Detection**: Evaluates risk and bot heuristics in real-time before transactions touch the payment gateway.
+4. **Venmo & Xoom Integrations**: Native social bill-splitting and guaranteed multi-currency exchange rate locks.
+5. **AG Grid Merchant Hub**: High-throughput catalog management with instant search, inline POS stock updates, and 1-click audit exports.
 
 ---
 
@@ -192,13 +197,13 @@ npm test --prefix apps/api
 
 ---
 
-## 🧰 Hackathon Sponsor Tools Documentation
+## 🧰 Enterprise Ecosystem & Developer Documentation
 
 - 📊 **AG Grid Integration**: Integrated in the Merchant Operations Hub (`apps/web/src/app/dashboard/page.tsx`) with fast text filtering, column pinning, sorting, and CSV export.
 - 🔌 **APIMatic Guide & SDK Generation**: See [docs/APIMATIC_GUIDE.md](docs/APIMATIC_GUIDE.md) and [docs/openapi.yaml](docs/openapi.yaml).
 - ☁️ **Render Cloud Deployment**: Fully provisioned via [render.yaml](render.yaml) Blueprint Infrastructure-as-Code.
 - 📬 **Postman Test Collection**: Pre-configured in [docs/postman_collection.json](docs/postman_collection.json).
-- 🎬 **Devpost Submission & 3-Min Video Pitch Script**: Complete product-only presentation guide available in [docs/devpost-submission.md](docs/devpost-submission.md).
+- 🎬 **Product Presentation Guide & 3-Min Video Pitch Script**: Complete product-only presentation walkthrough in [docs/devpost-submission.md](docs/devpost-submission.md).
 
 ---
 
