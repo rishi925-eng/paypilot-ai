@@ -13,5 +13,6 @@
       "@paypilot/contracts": ["../../packages/contracts/dist/index.d.ts"]
     }
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["src/tests/**/*", "**/*.test.ts"]
 }
