@@ -259,4 +259,54 @@ describe("PayPilot AI End-to-End Commerce & Payment Engine", () => {
     expect(res2.status).toBe(200);
     expect(res2.body.duplicate).toBe(true);
   });
+
+  it("POST /api/auth/register & /login should handle end-to-end user authentication", async () => {
+    const testEmail = `auth_test_${Date.now()}@paypilot.io`;
+
+    // 1. Register new user
+    const regRes = await request(app)
+      .post("/api/auth/register")
+      .send({
+        name: "Test Authenticated User",
+        email: testEmail,
+        password: "SecretPassword123!",
+        role: "CUSTOMER",
+      });
+
+    expect(regRes.status).toBe(201);
+    expect(regRes.body.success).toBe(true);
+    expect(regRes.body.data.token).toBeDefined();
+    expect(regRes.body.data.user.email).toBe(testEmail);
+
+    const authToken = regRes.body.data.token;
+
+    // 2. Fetch /api/auth/me with Bearer token
+    const meRes = await request(app)
+      .get("/api/auth/me")
+      .set("Authorization", `Bearer ${authToken}`);
+
+    expect(meRes.status).toBe(200);
+    expect(meRes.body.success).toBe(true);
+    expect(meRes.body.user.email).toBe(testEmail);
+
+    // 3. Login with credentials
+    const loginRes = await request(app)
+      .post("/api/auth/login")
+      .send({
+        email: testEmail,
+        password: "SecretPassword123!",
+      });
+
+    expect(loginRes.status).toBe(200);
+    expect(loginRes.body.success).toBe(true);
+    expect(loginRes.body.data.token).toBeDefined();
+
+    // 4. Logout to invalidate session
+    const logoutRes = await request(app)
+      .post("/api/auth/logout")
+      .set("Authorization", `Bearer ${authToken}`);
+
+    expect(logoutRes.status).toBe(200);
+    expect(logoutRes.body.success).toBe(true);
+  });
 });

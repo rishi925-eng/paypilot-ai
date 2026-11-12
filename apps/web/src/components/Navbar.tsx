@@ -23,12 +23,16 @@ import {
   ShieldCheck,
   Code2,
   Package,
+  User,
+  LogOut,
+  UserCheck,
 } from "lucide-react";
 import AIAssistantModal from "./AIAssistantModal";
 import JudgeDemoBar from "./JudgeDemoBar";
 import { fetchApi } from "../lib/api";
 import { useCurrency, CurrencyType } from "../lib/currency";
 import { useWishlist } from "../lib/wishlist";
+import { useAuth } from "../lib/auth";
 
 const CATALOGUE_CATEGORIES = [
   { label: "Audio", icon: Headphones, href: "/products?category=audio" },
@@ -50,15 +54,18 @@ export default function Navbar() {
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileCatOpen, setMobileCatOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [announcementVisible, setAnnouncementVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
 
+  const { user, openAuthModal, logout } = useAuth();
   const { currency, setCurrency } = useCurrency();
   const { items: wishlistItems } = useWishlist();
 
   const catalogueRef = useRef<HTMLDivElement>(null);
   const resourcesRef = useRef<HTMLDivElement>(null);
   const currencyRef = useRef<HTMLDivElement>(null);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
 
   // ── Scroll awareness ─────────────────────────────────────────────────────
   useEffect(() => {
@@ -96,6 +103,9 @@ export default function Navbar() {
       }
       if (currencyRef.current && !currencyRef.current.contains(e.target as Node)) {
         setCurrencyOpen(false);
+      }
+      if (userDropdownRef.current && !userDropdownRef.current.contains(e.target as Node)) {
+        setUserDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handler);
@@ -346,6 +356,90 @@ export default function Navbar() {
               )}
             </Link>
 
+            {/* User Account / Auth Menu */}
+            {user ? (
+              <div ref={userDropdownRef} className="relative">
+                <button
+                  onClick={() => setUserDropdownOpen((v) => !v)}
+                  className="flex items-center space-x-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-200 px-3 py-2 rounded-xl text-xs font-bold border border-cyan-500/30 hover:border-cyan-500/60 transition-all cursor-pointer"
+                >
+                  <div className="w-5 h-5 rounded-lg bg-gradient-to-br from-cyan-500 to-brand-600 text-white flex items-center justify-center text-[10px] font-black uppercase">
+                    {user.name.charAt(0)}
+                  </div>
+                  <span className="hidden sm:inline max-w-[80px] truncate">{user.name.split(" ")[0]}</span>
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                      user.role === "MERCHANT"
+                        ? "bg-amber-950 text-amber-400 border border-amber-500/40"
+                        : "bg-cyan-950 text-cyan-400"
+                    }`}
+                  >
+                    {user.role === "MERCHANT" ? "Admin" : "User"}
+                  </span>
+                  <ChevronDown className="w-3 h-3 text-slate-400" />
+                </button>
+
+                {userDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 space-y-1">
+                    <div className="px-3 py-2 border-b border-slate-800">
+                      <p className="text-xs font-bold text-white truncate">{user.name}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
+                    </div>
+
+                    <Link
+                      href="/orders"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+                    >
+                      <Package className="w-4 h-4 text-cyan-400" />
+                      <span>My Orders</span>
+                    </Link>
+
+                    {user.role === "MERCHANT" && (
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+                      >
+                        <LayoutDashboard className="w-4 h-4 text-amber-400" />
+                        <span>Operations Hub</span>
+                      </Link>
+                    )}
+
+                    <Link
+                      href="/wishlist"
+                      onClick={() => setUserDropdownOpen(false)}
+                      className="flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs text-slate-300 hover:text-white hover:bg-slate-800 transition-all"
+                    >
+                      <Heart className="w-4 h-4 text-pink-400" />
+                      <span>Wishlist ({wishlistItems.length})</span>
+                    </Link>
+
+                    <div className="pt-1 border-t border-slate-800">
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          logout();
+                        }}
+                        className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs text-rose-400 hover:bg-rose-950/40 transition-all cursor-pointer font-semibold"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Sign Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => openAuthModal("login")}
+                className="flex items-center space-x-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-xl text-xs font-bold border border-slate-800 hover:border-cyan-500/40 transition-all cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5 text-cyan-400" />
+                <span className="hidden sm:inline">Sign In</span>
+              </button>
+            )}
+
             {/* AI Copilot Button */}
             <button
               onClick={() => setIsAIModalOpen(true)}
@@ -405,6 +499,57 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </div>
+                )}
+              </div>
+
+              {/* User Section (Mobile) */}
+              <div className="p-3 bg-slate-950 rounded-2xl border border-slate-800">
+                {user ? (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-cyan-500 to-brand-600 text-white flex items-center justify-center font-bold text-xs">
+                          {user.name.charAt(0)}
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-white">{user.name}</p>
+                          <p className="text-[10px] text-slate-400">{user.email}</p>
+                        </div>
+                      </div>
+                      <span className="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-500/30 px-2 py-0.5 rounded-full font-bold">
+                        {user.role}
+                      </span>
+                    </div>
+                    <div className="pt-2 border-t border-slate-900 grid grid-cols-2 gap-2">
+                      <Link
+                        href="/orders"
+                        onClick={() => setMobileOpen(false)}
+                        className="py-1.5 px-3 bg-slate-900 text-center rounded-xl text-xs font-semibold text-slate-300 hover:text-white"
+                      >
+                        My Orders
+                      </Link>
+                      <button
+                        onClick={() => {
+                          setMobileOpen(false);
+                          logout();
+                        }}
+                        className="py-1.5 px-3 bg-rose-950/40 border border-rose-500/30 text-center rounded-xl text-xs font-semibold text-rose-400"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => {
+                      setMobileOpen(false);
+                      openAuthModal("login");
+                    }}
+                    className="w-full py-2.5 px-4 bg-gradient-to-r from-brand-600 to-cyan-600 rounded-xl font-bold text-xs text-white flex items-center justify-center space-x-2 shadow-md"
+                  >
+                    <User className="w-3.5 h-3.5" />
+                    <span>Sign In to PayPilot Account</span>
+                  </button>
                 )}
               </div>
 

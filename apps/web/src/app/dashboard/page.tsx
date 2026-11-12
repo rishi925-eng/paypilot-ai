@@ -49,6 +49,7 @@ import "ag-grid-community/styles/ag-theme-quartz.css";
 import { fetchApi } from "../../lib/api";
 import { useCurrency } from "../../lib/currency";
 import { useToast } from "../../lib/toast";
+import { useAuth } from "../../lib/auth";
 
 // Register Grid Modules
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -56,6 +57,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 export default function MerchantDashboard() {
   const { formatPrice } = useCurrency();
   const { toast } = useToast();
+  const { user, quickLogin } = useAuth();
 
   const [data, setData] = useState<any>(null);
   const [products, setProducts] = useState<any[]>([]);
@@ -379,6 +381,19 @@ export default function MerchantDashboard() {
               <span className="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
               Live Telemetry
             </span>
+            {user?.role === "MERCHANT" ? (
+              <span className="bg-amber-950/80 text-amber-300 border border-amber-500/30 text-[10px] font-bold px-2.5 py-1 rounded-full hidden sm:flex items-center">
+                Admin: {user.name}
+              </span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => quickLogin("merchant")}
+                className="bg-brand-600/30 hover:bg-brand-600/50 text-cyan-300 border border-cyan-500/40 text-[10px] font-bold px-2.5 py-1 rounded-full hidden sm:flex items-center transition-all cursor-pointer"
+              >
+                Log in as Merchant
+              </button>
+            )}
           </div>
           <p className="text-xs sm:text-sm text-slate-400 mt-1">
             Real-time verified revenue, high-speed enterprise catalogue, and PayPal Sandbox webhook simulator.

@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import AuthModal from "../components/AuthModal";
+import { AuthProvider } from "../lib/auth";
 import { CurrencyProvider } from "../lib/currency";
 import { ToastProvider } from "../lib/toast";
 import { WishlistProvider } from "../lib/wishlist";
@@ -81,27 +83,30 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body className="flex flex-col min-h-screen antialiased bg-slate-950 text-slate-100">
-        <CurrencyProvider>
-          <WishlistProvider>
-            <ToastProvider>
-              {/* Skip to main content for a11y */}
-              <a
-                href="#main-content"
-                className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-bold"
-              >
-                Skip to main content
-              </a>
+        <ToastProvider>
+          <AuthProvider>
+            <CurrencyProvider>
+              <WishlistProvider>
+                {/* Skip to main content for a11y */}
+                <a
+                  href="#main-content"
+                  className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-brand-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-bold"
+                >
+                  Skip to main content
+                </a>
 
-              <Navbar />
+                <Navbar />
 
-              <main id="main-content" className="flex-1">
-                {children}
-              </main>
+                <main id="main-content" className="flex-1">
+                  {children}
+                </main>
 
-              <Footer />
-            </ToastProvider>
-          </WishlistProvider>
-        </CurrencyProvider>
+                <Footer />
+                <AuthModal />
+              </WishlistProvider>
+            </CurrencyProvider>
+          </AuthProvider>
+        </ToastProvider>
       </body>
     </html>
   );

@@ -13,8 +13,10 @@ import {
   LayoutDashboard,
   Zap,
   Lock,
+  User,
 } from "lucide-react";
 import { useToast } from "../lib/toast";
+import { useAuth } from "../lib/auth";
 
 interface JudgeDemoBarProps {
   onOpenAI: (initialQuery?: string) => void;
@@ -23,6 +25,7 @@ interface JudgeDemoBarProps {
 export default function JudgeDemoBar({ onOpenAI }: JudgeDemoBarProps) {
   const router = useRouter();
   const { toast } = useToast();
+  const { openAuthModal } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
 
   const handleScenario = (scenario: string) => {
@@ -142,6 +145,15 @@ export default function JudgeDemoBar({ onOpenAI }: JudgeDemoBarProps) {
             >
               <LayoutDashboard className="w-3.5 h-3.5 text-purple-400 shrink-0" />
               <span>6. Operations Hub</span>
+            </button>
+
+            {/* Scenario 7: Switch User (Merchant / Buyer) */}
+            <button
+              onClick={() => openAuthModal("login")}
+              className="bg-slate-900 hover:bg-cyan-950 border border-slate-700 hover:border-cyan-400/60 text-slate-200 hover:text-cyan-300 px-3 py-1.5 rounded-xl transition-all font-bold flex items-center space-x-1.5 cursor-pointer active:scale-95 shadow-sm"
+            >
+              <User className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+              <span>7. Switch User (Merchant / Buyer)</span>
             </button>
           </div>
         </div>

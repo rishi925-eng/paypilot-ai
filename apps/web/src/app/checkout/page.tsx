@@ -20,11 +20,13 @@ import {
 import { fetchApi } from "../../lib/api";
 import { useCurrency } from "../../lib/currency";
 import { useToast } from "../../lib/toast";
+import { useAuth } from "../../lib/auth";
 
 export default function CheckoutPage() {
   const router = useRouter();
   const { formatPrice } = useCurrency();
   const { toast } = useToast();
+  const { user, openAuthModal } = useAuth();
 
   const [cart, setCart] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -79,6 +81,16 @@ export default function CheckoutPage() {
       setCouponDiscount(HONEY_COUPONS[saved]);
     }
   }, []);
+
+  useEffect(() => {
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        fullName: user.name,
+        email: user.email,
+      }));
+    }
+  }, [user]);
 
   const handleApplyCoupon = () => {
     const upper = couponCode.toUpperCase().trim();
@@ -263,13 +275,28 @@ export default function CheckoutPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Shipping Information Form */}
         <div className="lg:col-span-7 bg-slate-900/80 rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl space-y-6">
-          <div className="flex items-center space-x-3 border-b border-slate-800 pb-4">
-            <div className="w-8 h-8 rounded-xl bg-brand-600/30 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-black text-sm">
-              1
+          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-xl bg-brand-600/30 text-cyan-400 border border-cyan-500/30 flex items-center justify-center font-black text-sm">
+                1
+              </div>
+              <h2 className="font-extrabold text-base sm:text-lg text-white">
+                Shipping & Customer Information
+              </h2>
             </div>
-            <h2 className="font-extrabold text-base sm:text-lg text-white">
-              Shipping & Customer Information
-            </h2>
+            {!user ? (
+              <button
+                type="button"
+                onClick={() => openAuthModal("login")}
+                className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer"
+              >
+                Sign In to Auto-Fill
+              </button>
+            ) : (
+              <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                Logged in as {user.name.split(" ")[0]}
+              </span>
+            )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
