@@ -1134,90 +1134,92 @@ export default function StorefrontPage() {
           role="dialog"
           aria-modal="true"
           aria-label={`Quick view: ${quickViewProduct.name}`}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/85 backdrop-blur-md p-4 animate-fade-in-scale"
+          className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex items-center justify-center bg-slate-950/85 backdrop-blur-sm p-3 sm:p-4 animate-fade-in-scale"
           onClick={(e) => e.target === e.currentTarget && setQuickViewProduct(null)}
         >
-          <div className="bg-slate-900 border border-slate-700/80 w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl relative animate-fade-in-scale">
+          <div className="bg-slate-900 border border-slate-700/80 w-full max-w-lg max-h-[calc(100vh-2rem)] flex flex-col rounded-3xl overflow-hidden shadow-2xl shadow-black/90 relative my-auto animate-fade-in-scale">
             {/* Close */}
             <button
               onClick={() => setQuickViewProduct(null)}
-              className="absolute top-4 right-4 z-10 text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 p-1.5 rounded-xl transition-all"
+              className="absolute top-4 right-4 z-20 text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700 p-1.5 rounded-xl transition-all cursor-pointer"
               aria-label="Close quick view"
             >
               <X className="w-4 h-4" />
             </button>
 
-            {/* Hero image */}
-            <div className="relative h-56 bg-slate-950">
-              <img
-                src={quickViewProduct.imageUrl}
-                alt={quickViewProduct.name}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
+            <div className="overflow-y-auto flex-1 overscroll-contain">
+              {/* Hero image */}
+              <div className="relative h-56 bg-slate-950">
+                <img
+                  src={quickViewProduct.imageUrl}
+                  alt={quickViewProduct.name}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 to-transparent" />
 
-              {/* Overlay badges */}
-              <div className="absolute bottom-4 left-5 flex items-center space-x-2">
-                <span className="text-[10px] font-black text-cyan-400 bg-slate-900/85 backdrop-blur-md border border-slate-700/60 px-2.5 py-1 rounded-lg uppercase tracking-wider">
-                  {quickViewProduct.category}
-                </span>
-              </div>
-              <div className="absolute top-4 right-14 bg-slate-950/85 backdrop-blur-md px-2 py-1 rounded-xl text-[10px] font-bold text-amber-300 flex items-center space-x-1 border border-slate-800">
-                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span>{quickViewProduct.rating}</span>
-                <span className="text-slate-500">({quickViewProduct.reviewCount})</span>
-              </div>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div>
-                <h3 className="text-xl font-black text-white leading-snug">{quickViewProduct.name}</h3>
-                <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">{quickViewProduct.description}</p>
-              </div>
-
-              {/* Specifications */}
-              {quickViewProduct.attributes && quickViewProduct.attributes.length > 0 && (
-                <div className="bg-slate-950 rounded-2xl border border-slate-800 divide-y divide-slate-800/60 overflow-hidden">
-                  <div className="px-4 py-2">
-                    <span className="font-black text-slate-400 text-[10px] uppercase tracking-wider">Specifications</span>
-                  </div>
-                  {quickViewProduct.attributes.map((a, idx) => (
-                    <div key={idx} className="flex justify-between px-4 py-2 text-xs">
-                      <span className="text-slate-500 font-medium">{a.name}</span>
-                      <span className="font-bold text-slate-200">{a.value}</span>
-                    </div>
-                  ))}
+                {/* Overlay badges */}
+                <div className="absolute bottom-4 left-5 flex items-center space-x-2">
+                  <span className="text-[10px] font-black text-cyan-400 bg-slate-900/85 backdrop-blur-md border border-slate-700/60 px-2.5 py-1 rounded-lg uppercase tracking-wider">
+                    {quickViewProduct.category}
+                  </span>
                 </div>
-              )}
-
-              {/* Stock */}
-              <div className="flex items-center space-x-2 text-xs">
-                <div className={`w-2 h-2 rounded-full ${quickViewProduct.stock > 0 ? "bg-emerald-400 animate-pulse" : "bg-rose-400"}`} />
-                <span className={`font-bold ${quickViewProduct.stock > 0 ? "text-emerald-400" : "text-rose-400"}`}>
-                  {quickViewProduct.stock > 0 ? `${quickViewProduct.stock} units in stock` : "Out of stock"}
-                </span>
+                <div className="absolute top-4 right-14 bg-slate-950/85 backdrop-blur-md px-2 py-1 rounded-xl text-[10px] font-bold text-amber-300 flex items-center space-x-1 border border-slate-800">
+                  <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                  <span>{quickViewProduct.rating}</span>
+                  <span className="text-slate-500">({quickViewProduct.reviewCount})</span>
+                </div>
               </div>
 
-              {/* Price + CTA */}
-              <div className="flex items-center justify-between pt-2 border-t border-slate-800">
+              <div className="p-6 space-y-4">
                 <div>
-                  <span className="text-[10px] text-slate-500 uppercase font-black block tracking-widest">Authoritative Price</span>
-                  <span className="text-2xl font-black text-white">{formatPrice(quickViewProduct.price)}</span>
+                  <h3 className="text-xl font-black text-white leading-snug">{quickViewProduct.name}</h3>
+                  <p className="text-xs text-slate-400 mt-1.5 leading-relaxed">{quickViewProduct.description}</p>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <Link
-                    href={`/products/${quickViewProduct.slug}`}
-                    className="text-xs text-cyan-400 font-bold border border-cyan-500/30 hover:bg-cyan-500/10 px-3 py-2.5 rounded-xl transition-all"
-                  >
-                    View Details
-                  </Link>
-                  <button
-                    onClick={() => { handleAddToCart(quickViewProduct); setQuickViewProduct(null); }}
-                    className="bg-gradient-to-r from-brand-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center space-x-1.5"
-                  >
-                    <ShoppingCart className="w-3.5 h-3.5" />
-                    <span>Add to Cart</span>
-                  </button>
+
+                {/* Specifications */}
+                {quickViewProduct.attributes && quickViewProduct.attributes.length > 0 && (
+                  <div className="bg-slate-950 rounded-2xl border border-slate-800 divide-y divide-slate-800/60 overflow-hidden">
+                    <div className="px-4 py-2">
+                      <span className="font-black text-slate-400 text-[10px] uppercase tracking-wider">Specifications</span>
+                    </div>
+                    {quickViewProduct.attributes.map((a, idx) => (
+                      <div key={idx} className="flex justify-between px-4 py-2 text-xs">
+                        <span className="text-slate-500 font-medium">{a.name}</span>
+                        <span className="font-bold text-slate-200">{a.value}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Stock */}
+                <div className="flex items-center space-x-2 text-xs">
+                  <div className={`w-2 h-2 rounded-full ${quickViewProduct.stock > 0 ? "bg-emerald-400 animate-pulse" : "bg-rose-400"}`} />
+                  <span className={`font-bold ${quickViewProduct.stock > 0 ? "text-emerald-400" : "text-rose-400"}`}>
+                    {quickViewProduct.stock > 0 ? `${quickViewProduct.stock} units in stock` : "Out of stock"}
+                  </span>
+                </div>
+
+                {/* Price + CTA */}
+                <div className="flex items-center justify-between pt-2 border-t border-slate-800">
+                  <div>
+                    <span className="text-[10px] text-slate-500 uppercase font-black block tracking-widest">Authoritative Price</span>
+                    <span className="text-2xl font-black text-white">{formatPrice(quickViewProduct.price)}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Link
+                      href={`/products/${quickViewProduct.slug}`}
+                      className="text-xs text-cyan-400 font-bold border border-cyan-500/30 hover:bg-cyan-500/10 px-3 py-2.5 rounded-xl transition-all"
+                    >
+                      View Details
+                    </Link>
+                    <button
+                      onClick={() => { handleAddToCart(quickViewProduct); setQuickViewProduct(null); }}
+                      className="bg-gradient-to-r from-brand-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95 flex items-center space-x-1.5"
+                    >
+                      <ShoppingCart className="w-3.5 h-3.5" />
+                      <span>Add to Cart</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

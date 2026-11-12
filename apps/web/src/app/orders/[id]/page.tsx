@@ -46,6 +46,20 @@ export default function OrderDetailsPage() {
   const [disputeLoading, setDisputeLoading] = useState(false);
   const [resolutionResult, setResolutionResult] = useState<any>(null);
 
+  useEffect(() => {
+    if (!showDisputeModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setShowDisputeModal(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = prev;
+    };
+  }, [showDisputeModal]);
+
   const handleTriggerAiResolution = async (issueType: string, requestedAction: string) => {
     try {
       setDisputeLoading(true);
@@ -548,8 +562,11 @@ export default function OrderDetailsPage() {
 
         {/* AI Dispute & Instant Refund Concierge Modal */}
         {showDisputeModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-            <div className="bg-slate-900 border border-rose-500/40 rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-5">
+          <div
+            onClick={(e) => e.target === e.currentTarget && setShowDisputeModal(false)}
+            className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex items-center justify-center bg-black/80 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200"
+          >
+            <div className="bg-slate-900 border border-rose-500/40 rounded-3xl p-6 sm:p-8 max-w-lg w-full max-h-[calc(100vh-2rem)] overflow-y-auto my-auto shadow-2xl shadow-black/90 space-y-5">
               <div className="flex items-center justify-between border-b border-slate-800 pb-3">
                 <div className="flex items-center space-x-2">
                   <Shield className="w-5 h-5 text-rose-400" />

@@ -348,9 +348,9 @@ export default function AIAssistantModal({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex items-center justify-center bg-slate-950/85 backdrop-blur-sm p-3 sm:p-4 animate-in fade-in duration-200"
     >
-      <div className="bg-slate-900 border border-slate-700/80 w-full max-w-2xl h-[720px] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-slate-100">
+      <div className="relative bg-slate-900 border border-slate-700/80 w-full max-w-2xl h-[720px] max-h-[calc(100vh-2rem)] my-auto rounded-3xl shadow-2xl shadow-black/90 flex flex-col overflow-hidden text-slate-100">
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 p-4 border-b border-slate-800 flex items-center justify-between">
           <div className="flex items-center space-x-3">

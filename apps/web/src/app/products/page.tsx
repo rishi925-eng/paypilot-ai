@@ -153,9 +153,9 @@ function QuickViewModal({
     <div
       ref={overlayRef}
       onClick={(e) => e.target === overlayRef.current && onClose()}
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 overflow-y-auto overflow-x-hidden bg-black/75 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4"
     >
-      <div className="bg-slate-900 border border-slate-700 rounded-3xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-slate-900 border border-slate-700/80 rounded-3xl shadow-2xl shadow-black/90 max-w-2xl w-full my-auto max-h-[calc(100vh-2rem)] overflow-y-auto">
         {/* Header */}
         <div className="flex items-start justify-between p-6 border-b border-slate-800 sticky top-0 bg-slate-900 z-10">
           <div>
