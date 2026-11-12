@@ -6,6 +6,7 @@ export async function getAllProducts(options?: {
   minPrice?: number;
   maxPrice?: number;
   limit?: number;
+  sort?: string;
 }) {
   const where: any = {};
 
@@ -27,18 +28,36 @@ export async function getAllProducts(options?: {
     if (options.maxPrice !== undefined) where.price.lte = options.maxPrice;
   }
 
-  return prisma.product.findMany({
+  // Sorting support
+  let orderBy: any = { createdAt: "desc" };
+  if (options?.sort) {
+    switch (options.sort) {
+      case "price_asc":  orderBy = { price: "asc" }; break;
+      case "price_desc": orderBy = { price: "desc" }; break;
+      case "rating":     orderBy = { rating: "desc" }; break;
+      case "name":       orderBy = { name: "asc" }; break;
+      case "stock":      orderBy = { stock: "desc" }; break;
+      default:           orderBy = { createdAt: "desc" };
+    }
+  }
+
+  const products = await prisma.product.findMany({
     where,
     include: {
       attributes: true,
     },
     take: options?.limit || 50,
-    orderBy: { createdAt: "desc" },
+    orderBy,
   });
+
+  return products.map((p) => ({
+    ...p,
+    inStock: p.stock > 0,
+  }));
 }
 
 export async function getProductByIdOrSlug(idOrSlug: string) {
-  return prisma.product.findFirst({
+  const product = await prisma.product.findFirst({
     where: {
       OR: [{ id: idOrSlug }, { slug: idOrSlug }],
     },
@@ -46,10 +65,17 @@ export async function getProductByIdOrSlug(idOrSlug: string) {
       attributes: true,
     },
   });
+
+  if (!product) return null;
+
+  return {
+    ...product,
+    inStock: product.stock > 0,
+  };
 }
 
 export async function getProductsByIds(ids: string[]) {
-  return prisma.product.findMany({
+  const products = await prisma.product.findMany({
     where: {
       id: { in: ids },
     },
@@ -57,6 +83,11 @@ export async function getProductsByIds(ids: string[]) {
       attributes: true,
     },
   });
+
+  return products.map((p) => ({
+    ...p,
+    inStock: p.stock > 0,
+  }));
 }
 
 export async function createOrUpdateProduct(data: {

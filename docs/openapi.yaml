@@ -1,0 +1,318 @@
+openapi: 3.1.0
+info:
+  title: PayPilot AI Commerce & Payment Engine API
+  version: 1.0.0
+  description: >
+    PayPilot AI is an open-source, AI-powered commerce and payment platform engineered with
+    Next.js 14, Node.js/Express, Prisma ORM, LangGraph.js, AG Grid, and PayPal Sandbox integration.
+    This API provides endpoints for AI-guided product discovery, agentic checkout workflows,
+    PayPal Sandbox order creation and server-side capture, Simility AI fraud assessment,
+    Honey smart discounts, and live merchant telemetry.
+  contact:
+    name: PayPilot AI Team
+    url: https://github.com/rishi/paypilot-ai
+servers:
+  - url: http://localhost:5000
+    description: Local Development Server
+  - url: https://api.paypilot.onrender.com
+    description: Render Production Environment
+
+paths:
+  /health:
+    get:
+      summary: Service Health Check
+      description: Returns the health status and timestamp of the PayPilot API engine.
+      responses:
+        "200":
+          description: Service is healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  service:
+                    type: string
+                    example: PayPilot AI Commerce & Payment Engine
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/ai/chat:
+    post:
+      summary: AI Shopping Copilot & Agentic Commerce Workflow
+      description: >
+        Invokes the LangGraph-powered shopping agent to answer product queries,
+        compare specifications, check budget constraints, run PayPal Honey coupon optimization,
+        evaluate PayPal Simility AI fraud risk, and generate server-verified quotes for PayPal Sandbox checkout.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: Run agentic checkout for Sony headphones with best honey discount
+                conversationId:
+                  type: string
+                  nullable: true
+      responses:
+        "200":
+          description: AI Agent response with tool invocations and quote.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  reply:
+                    type: string
+                  toolInvocations:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        input:
+                          type: object
+                        result:
+                          type: object
+                  quote:
+                    $ref: "#/components/schemas/OrderQuote"
+                  suggestedActions:
+                    type: array
+                    items:
+                      type: string
+
+  /api/products:
+    get:
+      summary: Retrieve Product Catalogue
+      description: Returns all products in the catalogue with price, rating, and inventory stock.
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          required: false
+      responses:
+        "200":
+          description: List of products.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+
+  /api/products/compare:
+    get:
+      summary: Compare Products Side-by-Side
+      description: Compares 2-4 products by specifications, battery, price, and ratings.
+      parameters:
+        - name: ids
+          in: query
+          required: true
+          schema:
+            type: string
+            example: sony-wh-1000xm5,bose-qc45
+      responses:
+        "200":
+          description: Comparison matrix.
+
+  /api/orders:
+    get:
+      summary: List Orders
+      description: Returns orders for customer or merchant telemetry.
+      responses:
+        "200":
+          description: Order list.
+    post:
+      summary: Create Authoritative Order
+      description: Creates a draft order with zero-trust pricing calculated authoritatively from database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customerName
+                - customerEmail
+                - items
+              properties:
+                customerName:
+                  type: string
+                  example: Alex Customer
+                customerEmail:
+                  type: string
+                  format: email
+                  example: buyer-sandbox@paypilot.io
+                items:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - productId
+                      - quantity
+                    properties:
+                      productId:
+                        type: string
+                      quantity:
+                        type: integer
+      responses:
+        "201":
+          description: Order created.
+
+  /api/payments/create-paypal-order:
+    post:
+      summary: Initiate PayPal Sandbox Order
+      description: Invokes PayPal Orders API v2 to create a sandbox transaction intent for an existing order.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+              properties:
+                orderId:
+                  type: string
+      responses:
+        "200":
+          description: PayPal Order created.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      paypalOrderId:
+                        type: string
+                        example: MOCK-PP-ORD-123456
+                      orderId:
+                        type: string
+
+  /api/payments/capture-paypal-order:
+    post:
+      summary: Capture PayPal Sandbox Payment
+      description: Captures buyer-authorized payment via PayPal REST API, updates order to COMPLETED, and decrements stock.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - orderId
+                - paypalOrderId
+              properties:
+                orderId:
+                  type: string
+                paypalOrderId:
+                  type: string
+      responses:
+        "200":
+          description: Payment captured and verified.
+
+  /api/webhooks/paypal:
+    post:
+      summary: PayPal Webhook Ingestion & Idempotent Processing
+      description: Handles asynchronous PayPal webhook events (PAYMENT.CAPTURE.COMPLETED, PAYMENT.CAPTURE.DENIED).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - event_type
+                - resource
+              properties:
+                id:
+                  type: string
+                  example: WH-EVT-999
+                event_type:
+                  type: string
+                  example: PAYMENT.CAPTURE.COMPLETED
+                resource:
+                  type: object
+      responses:
+        "200":
+          description: Webhook acknowledged.
+
+  /api/analytics/dashboard:
+    get:
+      summary: Merchant Analytics & AG Grid Telemetry
+      description: Returns verified revenue metrics, inventory alerts, and sales trends.
+      responses:
+        "200":
+          description: Dashboard metrics.
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+          format: float
+        stock:
+          type: integer
+        imageUrl:
+          type: string
+        rating:
+          type: number
+
+    OrderQuote:
+      type: object
+      properties:
+        quoteId:
+          type: string
+        subtotal:
+          type: number
+        discountAmount:
+          type: number
+        couponCode:
+          type: string
+        honeyCashback:
+          type: number
+        similityRiskScore:
+          type: number
+        bnplInstallment:
+          type: number
+        zettleStoresAvailable:
+          type: number
+        tax:
+          type: number
+        shipping:
+          type: number
+        total:
+          type: number
+        requiresUserApproval:
+          type: boolean

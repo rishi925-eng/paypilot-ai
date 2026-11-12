@@ -1,5 +1,5 @@
 import { prisma } from "../../config/prisma.js";
-import { SearchProductsInput } from "../../../../packages/contracts/src/index.js";
+import { SearchProductsInput } from "@paypilot/contracts";
 
 export async function toolSearchProducts(input: SearchProductsInput) {
   const where: any = {};

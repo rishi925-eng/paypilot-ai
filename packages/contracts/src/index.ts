@@ -86,7 +86,7 @@ export const CreatePayPalOrderRequestSchema = z.object({
   }).optional(),
   currency: CurrencySchema.default("USD"),
 });
-export type CreatePayPalOrderRequest = z.infer<typeof CreatePayPalOrderRequestSchema>;
+export type CreatePayPalOrderRequest = z.input<typeof CreatePayPalOrderRequestSchema>;
 
 // Capture PayPal Order Request
 export const CapturePayPalOrderRequestSchema = z.object({
@@ -104,7 +104,7 @@ export const SearchProductsInputSchema = z.object({
   currency: CurrencySchema.optional().default("USD"),
   limit: z.number().int().positive().max(20).default(5),
 });
-export type SearchProductsInput = z.infer<typeof SearchProductsInputSchema>;
+export type SearchProductsInput = z.input<typeof SearchProductsInputSchema>;
 
 export const CompareProductsInputSchema = z.object({
   productIds: z.array(z.string()).min(2).max(4),
@@ -121,7 +121,7 @@ export const CheckBudgetInputSchema = z.object({
   budget: z.number().positive(),
   currency: CurrencySchema.default("USD"),
 });
-export type CheckBudgetInput = z.infer<typeof CheckBudgetInputSchema>;
+export type CheckBudgetInput = z.input<typeof CheckBudgetInputSchema>;
 
 export const PrepareOrderInputSchema = z.object({
   items: z.array(
@@ -132,7 +132,7 @@ export const PrepareOrderInputSchema = z.object({
   ).min(1),
   currency: CurrencySchema.default("USD"),
 });
-export type PrepareOrderInput = z.infer<typeof PrepareOrderInputSchema>;
+export type PrepareOrderInput = z.input<typeof PrepareOrderInputSchema>;
 
 export const OrderQuoteSchema = z.object({
   quoteId: z.string(),
@@ -146,6 +146,13 @@ export const OrderQuoteSchema = z.object({
     })
   ),
   subtotal: z.number(),
+  discountAmount: z.number().optional().default(0),
+  couponCode: z.string().optional(),
+  honeyCashback: z.number().optional().default(0),
+  similityRiskScore: z.number().optional(),
+  similityDecision: z.string().optional(),
+  bnplInstallment: z.number().optional(),
+  zettleStoresAvailable: z.number().optional(),
   tax: z.number(),
   shipping: z.number(),
   total: z.number(),
@@ -154,3 +161,4 @@ export const OrderQuoteSchema = z.object({
   requiresUserApproval: z.literal(true),
 });
 export type OrderQuote = z.infer<typeof OrderQuoteSchema>;
+

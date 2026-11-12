@@ -1,5 +1,5 @@
 import { prisma } from "../../config/prisma.js";
-import { CompareProductsInput } from "../../../../packages/contracts/src/index.js";
+import { CompareProductsInput } from "@paypilot/contracts";
 
 export async function toolCompareProducts(input: CompareProductsInput) {
   const products = await prisma.product.findMany({

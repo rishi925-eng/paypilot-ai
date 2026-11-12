@@ -1,8 +1,9 @@
 import { prisma } from "../../config/prisma.js";
-import { CheckBudgetInput } from "../../../../packages/contracts/src/index.js";
+import { CheckBudgetInput } from "@paypilot/contracts";
 
 export async function toolCheckBudget(input: CheckBudgetInput) {
-  const productIds = input.items.map((i) => i.productId);
+  const itemsList = input.items || [];
+  const productIds = itemsList.map((i: { productId: string; quantity?: number }) => i.productId);
   const products = await prisma.product.findMany({
     where: { id: { in: productIds } },
   });
@@ -14,11 +15,12 @@ export async function toolCheckBudget(input: CheckBudgetInput) {
   for (const item of input.items) {
     const p = productMap.get(item.productId);
     if (!p) continue;
-    const lineTotal = p.price * item.quantity;
+    const qty = item.quantity ?? 1;
+    const lineTotal = p.price * qty;
     calculatedSubtotal += lineTotal;
     itemBreakdown.push({
       name: p.name,
-      quantity: item.quantity,
+      quantity: qty,
       unitPrice: p.price,
       lineTotal,
     });

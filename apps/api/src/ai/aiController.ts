@@ -52,6 +52,9 @@ router.post("/chat", optionalAuthMiddleware, async (req: AuthenticatedRequest, r
       reply: agentResponse.reply,
       toolInvocations: agentResponse.toolInvocations,
       quote: agentResponse.quote,
+      venmoSplit: agentResponse.venmoSplit,
+      xoomQuote: agentResponse.xoomQuote,
+      swiftOffer: agentResponse.swiftOffer,
       suggestedActions: agentResponse.suggestedActions,
     });
   } catch (err) {

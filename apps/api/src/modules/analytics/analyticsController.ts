@@ -57,6 +57,43 @@ router.get("/dashboard", requireMerchantAuth, async (req: AuthenticatedRequest, 
       { date: "Day 4", revenue: Math.round(verifiedRevenue * 0.40) },
     ];
 
+    // 7. Top-selling products
+    const topSellingProducts = await prisma.orderItem.groupBy({
+      by: ["productId", "productName"],
+      _sum: { quantity: true },
+      _count: true,
+      orderBy: { _sum: { quantity: "desc" } },
+      take: 5,
+    });
+
+    // 8. Recent orders
+    const recentOrders = await prisma.order.findMany({
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        orderNumber: true,
+        customerName: true,
+        status: true,
+        total: true,
+        createdAt: true,
+      },
+    });
+
+    // 9. PayPal integration status
+    const paypalIntegrations = [
+      { name: "PayPal Sandbox REST v2", status: "active", type: "payments" },
+      { name: "Venmo Social Splits", status: "active", type: "social" },
+      { name: "Braintree Vault", status: "active", type: "gateway" },
+      { name: "Honey Coupons", status: "active", type: "discounts" },
+      { name: "Simility AI Risk", status: "active", type: "security" },
+      { name: "Zettle POS Sync", status: "active", type: "omnichannel" },
+      { name: "Paidy BNPL", status: "active", type: "financing" },
+      { name: "Xoom FX Engine", status: "active", type: "international" },
+      { name: "Swift Financial Capital", status: "active", type: "lending" },
+      { name: "Hyperwallet Payouts", status: "active", type: "disbursements" },
+    ];
+
     res.json({
       success: true,
       data: {
@@ -75,6 +112,9 @@ router.get("/dashboard", requireMerchantAuth, async (req: AuthenticatedRequest, 
         categoryStats,
         salesTrends,
         recentAudits,
+        topSellingProducts,
+        recentOrders,
+        paypalIntegrations,
       },
     });
   } catch (err) {

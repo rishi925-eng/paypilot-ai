@@ -12,13 +12,14 @@ const router = Router();
 // GET /api/products
 router.get("/", async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { category, q, minPrice, maxPrice, limit } = req.query;
+    const { category, q, minPrice, maxPrice, limit, sort } = req.query;
     const products = await getAllProducts({
       category: category as string,
       query: q as string,
       minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
       maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
       limit: limit ? parseInt(limit as string, 10) : undefined,
+      sort: sort as string,
     });
     res.json({ success: true, count: products.length, data: products });
   } catch (err) {

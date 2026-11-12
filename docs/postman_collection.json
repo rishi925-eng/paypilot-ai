@@ -1,0 +1,268 @@
+{
+  "info": {
+    "name": "PayPilot AI — PayPal & AI Commerce Test Suite",
+    "_postman_id": "c1f7b8d4-5391-49b8-b4b1-84227847721a",
+    "description": "Comprehensive Postman test collection for PayPilot AI endpoints, including Agentic Commerce, PayPal Sandbox order creation and server-side capture, Simility AI risk detection, Honey coupons, and AG Grid telemetry.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "createdOrderId",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "paypalOrderId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status is 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test('Service status is ok', function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql('ok');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Get Products Catalogue",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/products",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "products"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Products returned', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.length).to.be.above(0);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. AI Agentic Commerce Flow (Honey + Simility)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"message\": \"Run agentic checkout for Sony headphones with best honey discount\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/ai/chat",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "ai", "chat"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Agentic workflow executed', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(true);",
+              "    pm.expect(jsonData.quote).to.be.an('object');",
+              "    pm.expect(jsonData.quote.discountAmount).to.be.above(0);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Create Authoritative Order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"customerName\": \"Postman Test Runner\",\n  \"customerEmail\": \"postman-buyer@paypilot.io\",\n  \"items\": [\n    {\n      \"productId\": \"sony-wh-1000xm5\",\n      \"quantity\": 1\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/orders",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "orders"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Order created', function () {",
+              "    pm.response.to.have.status(201);",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('createdOrderId', jsonData.data.id);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Initiate PayPal Sandbox Order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"{{createdOrderId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/create-paypal-order",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments", "create-paypal-order"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('PayPal Sandbox order created', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.collectionVariables.set('paypalOrderId', jsonData.data.paypalOrderId);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Capture PayPal Sandbox Order",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"orderId\": \"{{createdOrderId}}\",\n  \"paypalOrderId\": \"{{paypalOrderId}}\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/payments/capture-paypal-order",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "payments", "capture-paypal-order"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Payment Captured & Verified', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(true);",
+              "    pm.expect(jsonData.status).to.eql('COMPLETED');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Simulate PayPal Webhook Event",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"WH-SIM-POSTMAN-1\",\n  \"event_type\": \"PAYMENT.CAPTURE.COMPLETED\",\n  \"resource_type\": \"capture\",\n  \"resource\": {\n    \"id\": \"CAP-SIM-123\",\n    \"status\": \"COMPLETED\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/webhooks/paypal",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "webhooks", "paypal"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Webhook handled idempotently', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.success).to.eql(true);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Merchant Dashboard Telemetry",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/analytics/dashboard",
+          "host": ["{{baseUrl}}"],
+          "path": ["api", "analytics", "dashboard"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Dashboard telemetry returns verified revenue', function () {",
+              "    pm.response.to.have.status(200);",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.data.metrics).to.have.property('verifiedRevenue');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}

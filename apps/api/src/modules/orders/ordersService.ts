@@ -164,3 +164,65 @@ export async function updateOrderStatus(
 
   return order;
 }
+
+export async function processAiOrderResolution(data: {
+  orderId: string;
+  issueType: string;
+  description: string;
+  requestedAction?: "FULL_REFUND" | "PARTIAL_REFUND" | "REPLACEMENT";
+}) {
+  const order = await prisma.order.findUnique({
+    where: { id: data.orderId },
+    include: { items: true, payments: true },
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  const refundAmount =
+    data.requestedAction === "PARTIAL_REFUND"
+      ? Math.round(order.total * 0.3 * 100) / 100
+      : order.total;
+
+  const refundId = `MOCK-REFUND-${Math.floor(100000 + Math.random() * 900000)}`;
+
+  // Update order status
+  const updatedOrder = await prisma.order.update({
+    where: { id: order.id },
+    data: {
+      status: "REFUNDED",
+      auditEvents: {
+        create: {
+          entityType: "ORDER_RESOLUTION",
+          entityId: order.orderNumber,
+          action: "AI_DISPUTE_APPROVED",
+          performedBy: "AI_RESOLUTION_CONCIERGE",
+          metadata: JSON.stringify({
+            refundId,
+            refundAmount,
+            issueType: data.issueType,
+            description: data.description,
+            paypalChannel: "PAYPAL_SANDBOX_REFUNDS_V2",
+          }),
+        },
+      },
+    },
+    include: {
+      items: true,
+      payments: true,
+      auditEvents: true,
+    },
+  });
+
+  return {
+    success: true,
+    resolutionId: `RES-${Date.now()}`,
+    paypalRefundId: refundId,
+    refundAmount,
+    currency: order.currency,
+    decision: "APPROVED_INSTANT_SETTLEMENT",
+    message: `PayPal AI Resolution Concierge approved your claim (${data.issueType}). A refund of $${refundAmount.toFixed(2)} ${order.currency} has been processed via PayPal Sandbox back to your original payment method.`,
+    order: updatedOrder,
+  };
+}

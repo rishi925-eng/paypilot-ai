@@ -1,6 +1,6 @@
 import { Router, Response, NextFunction } from "express";
 import { AuthenticatedRequest, optionalAuthMiddleware, requireMerchantAuth } from "../../middleware/auth.js";
-import { createOrder, getOrderById, listOrders, updateOrderStatus } from "./ordersService.js";
+import { createOrder, getOrderById, listOrders, updateOrderStatus, processAiOrderResolution } from "./ordersService.js";
 
 const router = Router();
 
@@ -45,6 +45,22 @@ router.post("/", optionalAuthMiddleware, async (req: AuthenticatedRequest, res: 
     res.status(201).json({ success: true, data: order });
   } catch (err) {
     next(err);
+  }
+});
+
+// POST /api/orders/:id/resolution (AI Post-Purchase Dispute & Refund Resolution)
+router.post("/:id/resolution", async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  try {
+    const { issueType, description, requestedAction } = req.body;
+    const result = await processAiOrderResolution({
+      orderId: req.params.id,
+      issueType: issueType || "ITEM_DAMAGED_OR_INCORRECT",
+      description: description || "Customer requested AI resolution through Order Hub",
+      requestedAction: requestedAction || "FULL_REFUND",
+    });
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, message: err.message });
   }
 });
 
