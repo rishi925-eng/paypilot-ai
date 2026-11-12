@@ -7,6 +7,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![Tests: Passing](https://img.shields.io/badge/Tests-19%20Passed-brightgreen?style=for-the-badge)](apps/api/src/tests/api.test.ts)
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rishi925-eng/paypilot-ai)
+
 > **Submission for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/)**  
 > *Zero-Trust Agentic Commerce Platform fusing multi-step AI orchestration, PayPal Honey coupon optimization, Simility AI fraud risk detection, and AG Grid enterprise telemetry with server-side PayPal Sandbox & Venmo checkout.*
 
