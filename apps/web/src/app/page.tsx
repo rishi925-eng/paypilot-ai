@@ -511,8 +511,8 @@ export default function StorefrontPage() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
-              <button
-                onClick={() => setIsAIModalOpen(true)}
+              <Link
+                href="/copilot"
                 className="group relative w-full sm:w-auto overflow-hidden bg-gradient-to-r from-brand-500 via-violet-600 to-cyan-500 hover:from-brand-400 hover:via-violet-500 hover:to-cyan-400 text-white font-extrabold px-8 py-4 rounded-2xl shadow-2xl shadow-brand-500/25 flex items-center justify-center space-x-2.5 transition-all duration-300 hover:scale-[1.03] active:scale-[0.98] text-sm"
               >
                 {/* Shimmer overlay */}
@@ -521,7 +521,7 @@ export default function StorefrontPage() {
                 <span className="relative z-10">Launch AI Shopping Copilot</span>
                 <span className="relative z-10 bg-white/15 text-white text-[10px] font-black px-2 py-0.5 rounded-full border border-white/20">PRO</span>
                 <ArrowRight className="w-4 h-4 relative z-10 group-hover:translate-x-1 transition-transform" />
-              </button>
+              </Link>
 
               <Link
                 href="/dashboard"

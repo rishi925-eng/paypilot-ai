@@ -441,13 +441,13 @@ export default function Navbar() {
             )}
 
             {/* AI Copilot Button */}
-            <button
-              onClick={() => setIsAIModalOpen(true)}
+            <Link
+              href="/copilot"
               className="flex items-center space-x-2 bg-gradient-to-r from-brand-600 via-indigo-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 text-white px-3.5 py-2 rounded-xl text-xs font-bold shadow-lg shadow-brand-500/20 transition-all hover:scale-[1.02] active:scale-95 cursor-pointer ml-1"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
               <span>AI Copilot</span>
-            </button>
+            </Link>
 
             {/* Mobile Hamburger */}
             <button
@@ -562,6 +562,21 @@ export default function Navbar() {
                   </div>
                 )}
               </div>
+
+              {/* AI Copilot */}
+              <Link
+                href="/copilot"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-between px-4 py-3 rounded-xl bg-gradient-to-r from-brand-950/80 to-slate-900 border border-cyan-500/30 text-cyan-300 font-bold transition-all"
+              >
+                <div className="flex items-center space-x-3">
+                  <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
+                  <span className="text-sm font-bold">AI Copilot Pro</span>
+                </div>
+                <span className="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded-full font-bold">
+                  PayPal Armed
+                </span>
+              </Link>
 
               {/* Deals */}
               <Link

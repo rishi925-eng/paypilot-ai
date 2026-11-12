@@ -20,6 +20,7 @@ const FOOTER_COLUMNS = [
     title: "Storefront",
     links: [
       { label: "Home",              href: "/" },
+      { label: "AI Copilot Pro",    href: "/copilot" },
       { label: "Products Catalogue",href: "/products" },
       { label: "Flash Deals",       href: "/deals" },
       { label: "Wishlist",          href: "/wishlist" },
