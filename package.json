@@ -9,7 +9,7 @@
     "dev": "concurrently \"npm run dev --prefix apps/api\" \"npm run dev --prefix apps/web\"",
     "dev:api": "npm run dev --prefix apps/api",
     "dev:web": "npm run dev --prefix apps/web",
-    "build": "npm run build --prefix packages/contracts && npx prisma db push && npx tsx prisma/seed.ts && npm run build --prefix apps/api && npm run build --prefix apps/web",
+    "build": "npm run build --prefix packages/contracts && npx prisma generate && npm run build --prefix apps/api && npm run build --prefix apps/web",
     "start": "node scripts/start-all.mjs",
     "test": "npm run test --prefix apps/api",
     "db:generate": "prisma generate",
