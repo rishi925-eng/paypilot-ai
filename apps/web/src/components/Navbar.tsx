@@ -540,16 +540,26 @@ export default function Navbar() {
                     </div>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => {
-                      setMobileOpen(false);
-                      openAuthModal("login");
-                    }}
-                    className="w-full py-2.5 px-4 bg-gradient-to-r from-brand-600 to-cyan-600 rounded-xl font-bold text-xs text-white flex items-center justify-center space-x-2 shadow-md"
-                  >
-                    <User className="w-3.5 h-3.5" />
-                    <span>Sign In to PayPilot Account</span>
-                  </button>
+                  <div className="space-y-2">
+                    <Link
+                      href="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="w-full py-2.5 px-4 bg-gradient-to-r from-brand-600 to-cyan-600 rounded-xl font-bold text-xs text-white flex items-center justify-center space-x-2 shadow-md"
+                    >
+                      <User className="w-3.5 h-3.5" />
+                      <span>Sign In to Account</span>
+                    </Link>
+                    <div className="text-center text-[11px] text-slate-400">
+                      New here?{" "}
+                      <Link
+                        href="/signup"
+                        onClick={() => setMobileOpen(false)}
+                        className="text-cyan-400 font-bold hover:underline"
+                      >
+                        Create free account →
+                      </Link>
+                    </div>
+                  </div>
                 )}
               </div>
 

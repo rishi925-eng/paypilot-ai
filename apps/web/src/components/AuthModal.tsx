@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import {
   X,
   Mail,
@@ -252,6 +253,17 @@ export default function AuthModal() {
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>
+
+          <div className="text-center text-[11px] text-slate-400">
+            Want the full page view?{" "}
+            <Link
+              href={authModalMode === "login" ? "/login" : "/signup"}
+              onClick={() => setIsAuthModalOpen(false)}
+              className="text-cyan-400 font-bold hover:underline"
+            >
+              Open dedicated {authModalMode === "login" ? "Login" : "Sign Up"} landing page →
+            </Link>
+          </div>
 
           {/* Footer security note */}
           <div className="pt-2 border-t border-slate-800 flex items-center justify-center space-x-2 text-[11px] text-slate-500">
