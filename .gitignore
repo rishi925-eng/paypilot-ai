@@ -7,7 +7,9 @@ node_modules/
 .next/
 out/
 build/
-dist/
+apps/api/dist/
+!packages/contracts/dist/
+!packages/contracts/dist/**
 
 # Logs & Environment
 npm-debug.log*
