@@ -9,6 +9,11 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: "file:./prisma/dev.db"
+      PAYPAL_MODE: "sandbox"
+      AI_PROVIDER: "mock"
+      NODE_ENV: "test"
 
     steps:
       - name: Checkout Code
@@ -27,22 +32,22 @@ jobs:
           npm install --prefix apps/api
           npm install --prefix apps/web
 
-      - name: Prisma Client Generation
-        run: |
-          npx prisma generate
-
       - name: Build Contracts
         run: |
           npm run build --prefix packages/contracts
 
+      - name: Sync Database Schema & Seed
+        run: |
+          npx prisma generate
+          npx prisma db push
+          npx tsx prisma/seed.ts
+
       - name: Run Backend Unit & Integration Tests
         run: |
           npm test --prefix apps/api
-        env:
-          DATABASE_URL: "file:./dev.db"
-          PAYPAL_MODE: "sandbox"
-          AI_PROVIDER: "mock"
 
       - name: Next.js Frontend Build Check
         run: |
           npm run build --prefix apps/web
+        env:
+          NEXT_PUBLIC_API_URL: "http://localhost:5000"
