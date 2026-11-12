@@ -58,18 +58,18 @@ export default function JudgeDemoBar({ onOpenAI }: JudgeDemoBarProps) {
   };
 
   return (
-    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-4xl w-[95%] sm:w-auto print:hidden no-print transition-all duration-300">
+    <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 max-w-4xl w-[95%] sm:w-auto print:hidden no-print transition-all duration-300 transform-gpu">
       {collapsed ? (
         <button
           onClick={() => setCollapsed(false)}
-          className="bg-slate-900/95 hover:bg-slate-800 text-cyan-300 border border-cyan-500/40 px-4 py-2 rounded-full text-xs font-black shadow-2xl shadow-cyan-500/20 backdrop-blur-xl flex items-center space-x-2 transition-all hover:scale-105 cursor-pointer"
+          className="bg-slate-900/98 hover:bg-slate-800 text-cyan-300 border border-cyan-500/50 px-4 py-2 rounded-full text-xs font-black shadow-2xl shadow-cyan-500/20 flex items-center space-x-2 transition-all hover:scale-105 cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
           <span>⚡ PayPal AI Hackathon Judge Quick-Tour</span>
           <ChevronUp className="w-3.5 h-3.5 ml-1" />
         </button>
       ) : (
-        <div className="bg-slate-950/95 border border-cyan-500/40 rounded-3xl p-3 shadow-2xl shadow-black/80 backdrop-blur-xl text-slate-100 space-y-2">
+        <div className="bg-slate-950/98 border border-cyan-500/40 rounded-3xl p-3 shadow-2xl shadow-black/90 text-slate-100 space-y-2">
           {/* Header */}
           <div className="flex items-center justify-between px-2 text-xs">
             <div className="flex items-center space-x-2">

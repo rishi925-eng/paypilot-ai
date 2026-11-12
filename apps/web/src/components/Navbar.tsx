@@ -137,10 +137,10 @@ export default function Navbar() {
 
       {/* ── Main Header (Spacious, Uncluttered, Premium) ──────────────────── */}
       <header
-        className={`sticky top-0 z-40 backdrop-blur-xl border-b transition-all duration-300 print:hidden no-print ${
+        className={`sticky top-0 z-40 backdrop-blur-md border-b transition-all duration-300 print:hidden no-print ${
           scrolled
-            ? "bg-slate-950/95 border-slate-800/80 shadow-xl shadow-black/30"
-            : "bg-slate-950/80 border-slate-800/40"
+            ? "bg-slate-950/98 border-slate-800/80 shadow-xl shadow-black/30"
+            : "bg-slate-950/95 border-slate-800/60"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-6">

@@ -3,6 +3,12 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
+  const existingProductCount = await prisma.product.count();
+  if (existingProductCount >= 30) {
+    console.log(`✅ Database already contains ${existingProductCount} products. Preserving users & orders.`);
+    return;
+  }
+
   console.log("🌱 Seeding PayPilot AI Database — 30 products across 8 categories...");
 
   // ─── Clean existing records in correct relation order ───────────────────────

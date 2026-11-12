@@ -143,6 +143,21 @@ export default function AIAssistantModal({
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingStep, setLoadingStep] = useState(0);
+
+  // Close on Escape key & lock background scroll
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isOpen, onClose]);
   const [isListening, setIsListening] = useState(false);
   const [voiceOutputEnabled, setVoiceOutputEnabled] = useState(false);
   const [quoteSecondsLeft, setQuoteSecondsLeft] = useState(900); // 15 min countdown
@@ -329,7 +344,12 @@ export default function AIAssistantModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
+    <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-in fade-in duration-200"
+    >
       <div className="bg-slate-900 border border-slate-700/80 w-full max-w-2xl h-[720px] rounded-3xl shadow-2xl flex flex-col overflow-hidden text-slate-100">
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-900 via-brand-950 to-slate-900 p-4 border-b border-slate-800 flex items-center justify-between">

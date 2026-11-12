@@ -440,11 +440,29 @@ export default function StorefrontPage() {
       {/* ══════════════════════════════════════════════════════════════════ */}
       <section className="relative overflow-hidden bg-slate-950 pt-20 pb-32">
 
-        {/* Layered gradient blobs */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-gradient-to-br from-brand-700/20 via-violet-600/15 to-cyan-600/20 blur-[140px] rounded-full animate-pulse" style={{ animationDuration: "4s" }} />
-          <div className="absolute top-[20%] -left-[10%] w-[400px] h-[400px] bg-violet-800/10 blur-[100px] rounded-full animate-float" style={{ animationDelay: "1s" }} />
-          <div className="absolute top-[30%] -right-[5%] w-[350px] h-[350px] bg-cyan-700/10 blur-[100px] rounded-full animate-float" style={{ animationDelay: "2s" }} />
+        {/* Layered ambient gradient glow (GPU-friendly, zero blur overlay bleeding) */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden select-none" style={{ isolation: "isolate" }}>
+          <div
+            className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[900px] h-[450px] rounded-full opacity-60 animate-pulse"
+            style={{
+              background: "radial-gradient(ellipse at center, rgba(37,99,235,0.25) 0%, rgba(139,92,246,0.15) 45%, transparent 70%)",
+              animationDuration: "5s",
+            }}
+          />
+          <div
+            className="absolute top-[20%] -left-[5%] w-[350px] h-[350px] rounded-full opacity-40 animate-float"
+            style={{
+              background: "radial-gradient(circle at center, rgba(124,58,237,0.2) 0%, transparent 70%)",
+              animationDelay: "1s",
+            }}
+          />
+          <div
+            className="absolute top-[25%] -right-[5%] w-[320px] h-[320px] rounded-full opacity-40 animate-float"
+            style={{
+              background: "radial-gradient(circle at center, rgba(6,182,212,0.2) 0%, transparent 70%)",
+              animationDelay: "2s",
+            }}
+          />
 
           {/* Subtle dot grid */}
           <div

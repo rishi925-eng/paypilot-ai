@@ -35,6 +35,21 @@ export default function AuthModal() {
   const [role, setRole] = useState<"CUSTOMER" | "MERCHANT">("CUSTOMER");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Close on Escape & lock body scroll
+  React.useEffect(() => {
+    if (!isAuthModalOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsAuthModalOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [isAuthModalOpen, setIsAuthModalOpen]);
+
   if (!isAuthModalOpen) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {

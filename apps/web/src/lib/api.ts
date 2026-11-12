@@ -1,4 +1,9 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "";
+let rawBase = (process.env.NEXT_PUBLIC_API_URL || "").trim();
+if (rawBase && !rawBase.startsWith("http://") && !rawBase.startsWith("https://")) {
+  rawBase = `https://${rawBase}`;
+}
+// Remove trailing slash if present
+const API_BASE = rawBase.replace(/\/+$/, "");
 
 export async function fetchApi<T = any>(
   path: string,
