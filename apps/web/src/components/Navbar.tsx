@@ -431,13 +431,13 @@ export default function Navbar() {
                 )}
               </div>
             ) : (
-              <button
-                onClick={() => openAuthModal("login")}
+              <Link
+                href="/login"
                 className="flex items-center space-x-1.5 bg-slate-900/90 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 px-3 py-2 rounded-xl text-xs font-bold border border-slate-800 hover:border-cyan-500/40 transition-all cursor-pointer"
               >
                 <User className="w-3.5 h-3.5 text-cyan-400" />
                 <span className="hidden sm:inline">Sign In</span>
-              </button>
+              </Link>
             )}
 
             {/* AI Copilot Button */}

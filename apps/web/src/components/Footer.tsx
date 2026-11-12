@@ -108,7 +108,7 @@ function FooterLink({
 /* ─────────────────────────────────────────────────────────────────────────── */
 export default function Footer() {
   return (
-    <footer className="bg-slate-950 text-slate-400 border-t border-slate-800/60 mt-20 print:hidden no-print">
+    <footer className="bg-slate-950 text-slate-400 border-t border-slate-800/60 mt-20 pb-28 sm:pb-24 print:hidden no-print">
 
       {/* ── Newsletter / CTA Banner ── */}
       <div className="border-b border-slate-800/60">

@@ -93,13 +93,13 @@ export default function OrdersPage() {
             <span>Viewing orders for <strong>{user.email}</strong></span>
           </div>
         ) : (
-          <button
-            onClick={() => openAuthModal("login")}
+          <Link
+            href="/login?redirect=/orders"
             className="flex items-center space-x-2 bg-gradient-to-r from-brand-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 text-white px-4 py-2 rounded-xl text-xs font-bold transition-all shadow-md cursor-pointer"
           >
             <User className="w-4 h-4" />
             <span>Sign In to Sync Orders</span>
-          </button>
+          </Link>
         )}
       </div>
 

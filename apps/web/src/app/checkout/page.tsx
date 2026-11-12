@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   ShieldCheck,
   CreditCard,
@@ -285,13 +286,12 @@ export default function CheckoutPage() {
               </h2>
             </div>
             {!user ? (
-              <button
-                type="button"
-                onClick={() => openAuthModal("login")}
+              <Link
+                href="/login?redirect=/checkout"
                 className="text-xs font-semibold text-cyan-400 hover:text-cyan-300 hover:underline cursor-pointer"
               >
                 Sign In to Auto-Fill
-              </button>
+              </Link>
             ) : (
               <span className="text-[11px] font-semibold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-full border border-emerald-500/30">
                 Logged in as {user.name.split(" ")[0]}
