@@ -5,37 +5,64 @@
 [![APIMatic Ready](https://img.shields.io/badge/APIMatic-OpenAPI_3.1-00B4D8?style=for-the-badge)](https://www.apimatic.io/)
 [![Render Deployed](https://img.shields.io/badge/Render-Blueprint_IaC-46E3B7?style=for-the-badge&logo=render&logoColor=black)](https://render.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
-[![Tests: Passing](https://img.shields.io/badge/Tests-19%20Passed-brightgreen?style=for-the-badge)](apps/api/src/tests/api.test.ts)
+[![Tests: Passing](https://img.shields.io/badge/Tests-20%20Passed-brightgreen?style=for-the-badge)](apps/api/src/tests/api.test.ts)
 
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rishi925-eng/paypilot-ai)
 
-> **Submission for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/)**  
-> *Zero-Trust Agentic Commerce Platform fusing multi-step AI orchestration, PayPal Honey coupon optimization, Simility AI fraud risk detection, and AG Grid enterprise telemetry with server-side PayPal Sandbox & Venmo checkout.*
+> **Official Submission for the [PayPal AI Hackathon](https://paypalaihackathon.devpost.com/)**  
+> *Zero-Trust Agentic Commerce Platform orchestrating multi-step AI copilot flows, PayPal Honey coupon optimization, Simility AI fraud risk heuristics, Venmo social bill-splits, Xoom multi-currency FX rate locks, and AG Grid enterprise telemetry with server-side PayPal Sandbox & Pay in 4 checkout.*
 
 ---
 
 ## 🏆 Hackathon Prize Targets
 
-- 🥇 **Grand Prize (1st Place: \$12,000 USD)**
-- 🤖 **Best Use of Agentic Commerce (\$5,000 USD)**
-- 🧠 **Best Use of PayPal + AI (\$5,000 USD)**
-- 📊 **Best Use of AG Grid (\$5,000 USD - 1st Place Sponsor Prize)**
-- 🔌 **Best Use of APIMatic (\$1,000 USD + 6mo Subscription)**
-- ☁️ **Best Use of Render (\$1,000 USD Cloud Credits)**
+- 🥇 **Grand Prize (1st Place: $12,000 USD)**
+- 🤖 **Best Use of Agentic Commerce ($5,000 USD)**
+- 🧠 **Best Use of PayPal + AI ($5,000 USD)**
+- 📊 **Best Use of AG Grid ($5,000 USD - 1st Place Sponsor Prize)**
+- 🔌 **Best Use of APIMatic ($1,000 USD + 6mo Subscription)**
+- ☁️ **Best Use of Render ($1,000 USD Cloud Credits)**
 
 ---
 
-## ✨ Key Features & Architecture
+## ✨ Key Features & PayPal Suite Integration
 
-- 🤖 **Autonomous Agentic Auto-Pilot**: Multi-tool reasoning flow executing product discovery, stock checks, discount finding, fraud scoring, and quote generation in a single prompt.
-- 🍯 **PayPal Honey Smart Coupon Engine**: Auto-discovers and tests promotional codes (`HONEY20`, `PAYPALAI`, `DEVPOST10`), computes stackable savings, and awards Honey Gold points.
-- 🛡️ **PayPal Simility AI Risk Guard**: Real-time transaction fraud scoring, bot detection, and velocity checks before orders enter the PayPal sandbox.
-- 🏬 **PayPal Zettle Omnichannel Sync**: Live inventory synchronization between central warehouse storage and physical retail point-of-sale locations.
-- 💳 **PayPal Sandbox, Venmo & Pay in 4 Checkout**: Strict server-side order creation (`/v2/checkout/orders`), capture verification, and 4 interest-free installment calculations.
-- 📊 **Enterprise AG Grid Merchant Operations Hub**: High-performance data tables for product catalogue and order tracking with instant text search, column sorting, inline stock adjustments, and one-click CSV export.
-- 🔒 **Zero-Trust Financial State Machine**: Prices and stock are authoritative from PostgreSQL—never trusted from client or AI inputs.
-- 📑 **APIMatic OpenAPI 3.1 & Postman Ready**: Spec file and collection ready for instant multi-language SDK generation and API testing.
+- 🤖 **Autonomous Agentic Copilot (`/copilot`)**: Dedicated, full-page AI copilot executing catalogue discovery, live stock verification, promo code tests, fraud checks, and locked order quotes in a single conversational prompt.
+- 🍯 **PayPal Honey Smart Coupon Engine**: Auto-discovers and validates promotional discount codes (`HONEY20`, `PAYPALAI`, `DEVPOST10`), computes stackable savings, and awards Honey Gold rewards.
+- 🛡️ **PayPal Simility AI Risk Guard**: Real-time fraud scoring, bot detection, and velocity analysis before orders enter the PayPal sandbox.
+- 🏬 **PayPal Zettle Omnichannel Sync**: Live inventory ledger synchronization between central warehouse storage and physical retail point-of-sale locations.
+- 👥 **Venmo Social Bill-Split**: Automatically calculates equal/proportional per-person shares with 1-click Venmo deep links.
+- 🌍 **PayPal Xoom Cross-Border FX**: Transparent international currency conversions with guaranteed rate locks and zero surprise conversion fees.
+- 💳 **Server-Authoritative PayPal Checkout (`/checkout`)**: Strict server-side order creation (`/v2/checkout/orders`), capture verification, and 4 interest-free installment calculations.
+- 📊 **Enterprise AG Grid Merchant Operations Hub (`/dashboard`)**: Sub-millisecond text search, multi-column sorting, inline stock adjustments synced with retail POS, and 1-click CSV financial audit exports.
+- 🔒 **Zero-Trust Financial State Machine**: Prices and discounts are cryptographically authoritative from the database—never trusted from client or AI inputs.
+- 🧾 **Official Printable Tax Invoices & Instant Refunds (`/orders/[id]`)**: Generates audit-compliant tax invoices with an autonomous AI dispute resolution and instant sandbox refund engine.
+- 📑 **APIMatic OpenAPI 3.1 Ready**: Fully compliant OpenAPI 3.1 specification for instant multi-language SDK generation.
 - ☁️ **Render Cloud Deployment**: Production Blueprint (`render.yaml`) for 1-click cloud provisioning.
+
+---
+
+## 🗺️ Application Routes & Architecture
+
+All features use **dedicated page routing** with zero modal traps, zero screen-blur filters, and smooth natural scrolling:
+
+| Route | Feature Description | Core Capabilities |
+| :--- | :--- | :--- |
+| **`/`** | Storefront Landing | Hero discovery, featured hardware, trust pillars & live metrics |
+| **`/copilot`** | AI Shopping Copilot Pro | Full-page conversation, speech-to-text, audio replies & locked quotes |
+| **`/products`** | Products Catalogue | Category filters, rating filters, price sorting & quick comparison |
+| **`/products/[slug]`** | Product Detail Page | High-res imagery, technical specifications & instant cart addition |
+| **`/deals`** | Flash Deals Hub | Active discounts with auto-applied Honey coupons |
+| **`/cart`** | Authoritative Shopping Cart | Subtotal calculation, discount audit & checkout transfer |
+| **`/checkout`** | PayPal Sandbox Checkout | Server-side PayPal buttons, Venmo funding & Pay in 4 |
+| **`/orders`** | Orders History Ledger | Real-time order tracking, statuses & invoice access |
+| **`/orders/[id]`** | Official Tax Invoice & Refunds | Printable receipt & AI dispute instant refund concierge |
+| **`/dashboard`** | AG Grid Operations Hub | Live catalogue data grid, inline stock editing & CSV export |
+| **`/login`** | User Sign In | Role-based authentication & 1-click demo profiles |
+| **`/signup`** | User Registration | Customer and Merchant account creation |
+| **`/wishlist`** | Customer Wishlist | Persistent saved items |
+| **`/about`** | Architecture & Security | System diagrams, trust certifications & PayPal integrations |
+| **`/api-docs`** | APIMatic & OpenAPI Reference | Interactive endpoint explorer & SDK download links |
 
 ---
 
@@ -43,20 +70,21 @@
 
 ```mermaid
 flowchart TD
-    User["👤 Buyer / Merchant"] --> NextWeb["Next.js 14 Frontend\n(Tailwind + Lucide + AG Grid)"]
+    User["👤 Buyer / Merchant"] --> NextWeb["Next.js 14 Frontend\n(Tailwind CSS + AG Grid + Lucide)"]
     NextWeb --> ExpressAPI["Node.js / Express API Server\n(TypeScript + Zod + Pino)"]
     
     subgraph AgenticEngine ["Agentic Commerce Orchestration"]
         Agent["LangGraph Shopping Copilot"]
-        ZettleTool["tool_zettle_sync"]
-        HoneyTool["tool_honey_discounts"]
-        SimilityTool["tool_simility_risk"]
-        PaidyTool["tool_paidy_installments"]
+        ZettleTool["tool_zettle_sync (Omnichannel POS)"]
+        HoneyTool["tool_honey_discounts (Promo Optimizer)"]
+        SimilityTool["tool_simility_risk (Fraud Scoring)"]
+        VenmoTool["tool_venmo_split (Social Split)"]
+        XoomTool["tool_xoom_fx (Cross-Border Rate Lock)"]
         QuoteTool["tool_prepare_order (Locked Quote)"]
     end
     
     subgraph DataPersistence ["Authoritative Database"]
-        Prisma["Prisma ORM"]
+        Prisma["Prisma ORM Dual Generator\n(Root & apps/api)"]
         DB[("PostgreSQL / SQLite")]
     end
     
@@ -75,27 +103,44 @@ flowchart TD
 
 ---
 
+## ⚡ Judge 1-Click Interactive Demo Tour
+
+A floating, minimized quick-tour bar is accessible at the bottom of the application with 7 pre-configured judge scenarios:
+
+1. **⚡ Scenario 1: Auto-Pilot (Honey + Simility)** → Routes to `/copilot` executing multi-step discount hunting and fraud scoring for Sony headphones.
+2. **👥 Scenario 2: Venmo Social Split** → Routes to `/copilot` calculating per-person payment shares with Venmo deep links.
+3. **🔒 Scenario 3: Zero-Trust Security Guard** → Attempts prompt-injection price tampering to demonstrate server-side 403 attack defense.
+4. **🌍 Scenario 4: Xoom FX Multi-Currency** → Routes to `/copilot` converting order pricing to Euros with guaranteed rate lock.
+5. **🧾 Scenario 5: Tax Invoice & Instant Refund** → Routes to `/orders/cmwddr601004o9cvq6h44yz6w` displaying official printable invoice and 1-click refund concierge.
+6. **📊 Scenario 6: Operations Hub** → Routes to `/dashboard` opening the enterprise AG Grid inventory ledger.
+7. **👤 Scenario 7: Switch User** → Routes to `/login` for seamless switching between Shopper and Merchant admin roles.
+
+---
+
 ## 🚀 Quickstart Guide (Run in 2 Minutes)
 
 ### 1. Prerequisites
-- **Node.js**: v18+
+- **Node.js**: v18+ or v20+
 - **npm** or **pnpm**
 
 ### 2. Installation & Setup
 ```bash
 # Clone the repository
-git clone https://github.com/rishi/paypilot-ai.git
+git clone https://github.com/rishi925-eng/paypilot-ai.git
 cd paypilot-ai
 
 # Copy environment variables
 cp .env.example .env
 
-# Install dependencies (root, backend, frontend, AG Grid, contracts)
+# Install dependencies (workspaces: root, api, web, contracts)
 npm install
 
 # Push database schema & seed initial catalogue
 npx prisma db push
 npm run db:seed
+
+# Build contracts, backend, and frontend
+npm run build
 ```
 
 ### 3. Launch Development Servers
@@ -103,19 +148,21 @@ npm run db:seed
 npm run dev
 ```
 
-- 🛍️ **Storefront & Agentic AI Copilot**: [http://localhost:3000](http://localhost:3000)
+- 🛍️ **Storefront & Copilot**: [http://localhost:3000](http://localhost:3000)
+- 🤖 **Dedicated AI Copilot**: [http://localhost:3000/copilot](http://localhost:3000/copilot)
 - 📊 **Merchant Operations Hub (AG Grid)**: [http://localhost:3000/dashboard](http://localhost:3000/dashboard)
 - ⚡ **Backend API & Health**: [http://localhost:5000/health](http://localhost:5000/health)
 
 ---
 
-## 🧪 Automated Testing
+## 🧪 Automated Testing (20 / 20 Tests Passing)
 
-PayPilot AI includes a comprehensive automated test suite testing Agentic Commerce workflows, PayPal orders, Simility risk assessment, Honey coupons, and idempotency:
+PayPilot AI includes a comprehensive Vitest integration test suite testing all agentic commerce flows, PayPal orders, Simility fraud scoring, Honey coupons, and idempotency:
 
 ```bash
-npm run test --prefix apps/api
+npm test --prefix apps/api
 ```
+
 ```text
  ✓ GET /health should return service status
  ✓ GET /api/products should return seeded catalogue list
@@ -136,22 +183,25 @@ npm run test --prefix apps/api
  ✓ POST /api/ai/chat should enforce security guardrails on bypass attempts
  ✓ End-to-End Order Creation & PayPal Sandbox Payment Capture
  ✓ POST /api/webhooks/paypal should handle events idempotently
+ ✓ POST /api/auth/register & /login should handle end-to-end user authentication
 
  Test Files  1 passed (1)
-      Tests  19 passed (19)
+      Tests  20 passed (20)
+   Duration  710ms
 ```
 
 ---
 
 ## 🧰 Hackathon Sponsor Tools Documentation
 
-- 📊 **AG Grid Integration**: Fully integrated in the Merchant Operations Hub (`apps/web/src/app/dashboard/page.tsx`).
+- 📊 **AG Grid Integration**: Integrated in the Merchant Operations Hub (`apps/web/src/app/dashboard/page.tsx`) with fast text filtering, column pinning, sorting, and CSV export.
 - 🔌 **APIMatic Guide & SDK Generation**: See [docs/APIMATIC_GUIDE.md](docs/APIMATIC_GUIDE.md) and [docs/openapi.yaml](docs/openapi.yaml).
-- ☁️ **Render Cloud Deployment**: See [docs/RENDER_DEPLOYMENT.md](docs/RENDER_DEPLOYMENT.md) and [render.yaml](render.yaml).
-- 📬 **Postman Test Collection**: See [docs/postman_collection.json](docs/postman_collection.json).
-- 🎬 **Devpost Submission & 3-Min Video Script**: See [docs/devpost-submission.md](docs/devpost-submission.md).
+- ☁️ **Render Cloud Deployment**: Fully provisioned via [render.yaml](render.yaml) Blueprint Infrastructure-as-Code.
+- 📬 **Postman Test Collection**: Pre-configured in [docs/postman_collection.json](docs/postman_collection.json).
+- 🎬 **Devpost Submission & 3-Min Video Pitch Script**: Complete product-only presentation guide available in [docs/devpost-submission.md](docs/devpost-submission.md).
 
 ---
 
 ## 📄 License
+
 This project is open-source and licensed under the **[MIT License](LICENSE)**.
